@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-console.log(require("@/assets/img/sprite_footer_02.png").default);
-
 export const FooterWrapper = styled.div`
   height: 172px;
   background: #f2f2f2;
