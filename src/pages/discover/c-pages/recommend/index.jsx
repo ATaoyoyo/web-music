@@ -6,7 +6,7 @@ const ATRecommend = () => {
   const dispatch = useDispatch();
   const { topBanner } = useSelector(
     (state) => ({
-      topBanner: state.recommend.topBanner,
+      topBanner: state.getIn(["recommend", "topBanner"]),
     }),
     shallowEqual
   );
