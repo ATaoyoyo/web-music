@@ -36,7 +36,7 @@ const TopBanner = () => {
 
   const beforeChange = useCallback((form, to) => {
     setCurrentIndex(to);
-  });
+  }, []);
 
   return (
     <div>
