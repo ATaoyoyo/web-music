@@ -9,7 +9,7 @@ const AlbumCover = (props) => {
     <AlbumWrapper size={size} width={width} bgp={bgp}>
       <div className="album-image">
         <img src={getImageSize(info.picUrl, size)} alt="" />
-        <a href="/todo" className="cover image_cover"/>
+        <a href="/todo" className="cover image_cover">Cover</a>
       </div>
       <div className="album-info">
         <div className="name text-nowrap">{info.name}</div>

@@ -13,7 +13,7 @@ const TopRanking = (props) => {
       <div className="header">
         <div className="image">
           <img src={getImageSize(info.coverImgUrl)} alt="" />
-          <a href="/todo" className="image_cover"></a>
+          <a href="/todo" className="image_cover">Ranking</a>
         </div>
         <div className="info">
           <a href="/todo">{info.name}</a>
