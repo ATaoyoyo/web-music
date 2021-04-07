@@ -12,3 +12,12 @@ export function getRecommend(limit = 30) {
     },
   });
 }
+
+export function getNewAlbum(limit = 30) {
+  return request({
+    url: "/album/new",
+    params: {
+      limit,
+    },
+  });
+}
