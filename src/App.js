@@ -8,6 +8,7 @@ import store from "./store";
 
 import ATHeader from "./components/Header";
 import ATFooter from "./components/Footer";
+import PlayerBar from "./pages/player/player-bar";
 
 const App = memo(function () {
   return (
@@ -16,6 +17,7 @@ const App = memo(function () {
         <ATHeader />
         {renderRoutes(routes)}
         <ATFooter />
+        <PlayerBar />
       </HashRouter>
     </Provider>
   );
