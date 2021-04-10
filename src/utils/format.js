@@ -44,3 +44,7 @@ export function formatDate(time, fmt) {
   }
   return fmt;
 }
+
+export function playMusic(id) {
+  return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
+}

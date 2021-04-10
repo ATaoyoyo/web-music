@@ -1,16 +1,16 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { Slider } from "antd";
 import { Control, Operator, PlayBarWrapper, PlayInfo } from "./styled";
 import { getSongDetailAction } from "../store/actionCreator";
-import { getImageSize, formatDate } from "@/utils/format";
+import { formatDate, getImageSize, playMusic } from "@/utils/format";
 
-const PlayerBar = (props) => {
+const PlayerBar = () => {
   // 获取歌曲详情
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getSongDetailAction(347230));
+    dispatch(getSongDetailAction(33894312));
   }, [dispatch]);
   const { currentSong } = useSelector(
     (state) => ({
@@ -24,12 +24,57 @@ const PlayerBar = (props) => {
   const singerName = (currentSong.ar && currentSong.ar[0].name) || "未知歌手";
   const duration = currentSong.dt || 0;
 
+  // 歌曲播放
+  const audioRef = useRef();
+  const [currentTime, setCurrentTime] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isChange, setIsChange] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
+  const playCountTime = formatDate(currentTime, "mm:ss");
+  const allTime = formatDate(duration, "mm:ss");
+
+  const handlePlayMusic = () => {
+    audioRef.current.src = playMusic(currentSong.id);
+    isPlay ? audioRef.current.pause() : audioRef.current.play();
+    setIsPlay(!isPlay);
+  };
+
+  const timeUpdate = (e) => {
+    if (!isChange) {
+      setCurrentTime(e.target.currentTime * 1000);
+      setProgress((currentTime / duration) * 100);
+    }
+  };
+
+  const sliderChange = useCallback((value) => {
+    setCurrentTime((value / 100) * duration);
+    setIsChange(true);
+    setProgress(value);
+  }, []);
+
+  const sliderAfterChange = useCallback(
+    (value) => {
+      const time = ((value / 100) * duration) / 1000;
+      audioRef.current.currentTime = time;
+      setCurrentTime(time * 1000);
+      setIsChange(false);
+
+      if (!isPlay) {
+        handlePlayMusic();
+      }
+    },
+    [duration, isPlay]
+  );
+
   return (
     <PlayBarWrapper className="sprite_player">
       <div className="content wrap-v2">
-        <Control>
+        <Control isPlaying={isPlay}>
           <button className="sprite_player prev" />
-          <button className="sprite_player play" />
+          <button
+            className="sprite_player play"
+            onClick={() => handlePlayMusic()}
+          />
           <button className="sprite_player next" />
         </Control>
         <PlayInfo>
@@ -51,13 +96,17 @@ const PlayerBar = (props) => {
               </a>
             </div>
             <div className="progress">
-              <Slider defaultValue={30} />
+              <Slider
+                defaultValue={30}
+                value={progress}
+                tooltipVisible={false}
+                onChange={sliderChange}
+                onAfterChange={sliderAfterChange}
+              />
               <div className="time">
-                <span className="now-time">02:30</span>
+                <span className="now-time">{playCountTime}</span>
                 <span className="divider">/</span>
-                <span className="duration">
-                  {formatDate(duration, "mm:ss")}
-                </span>
+                <span className="duration">{allTime}</span>
               </div>
             </div>
           </div>
@@ -74,6 +123,7 @@ const PlayerBar = (props) => {
           </div>
         </Operator>
       </div>
+      <audio ref={audioRef} onTimeUpdate={(e) => timeUpdate(e)} />
     </PlayBarWrapper>
   );
 };
