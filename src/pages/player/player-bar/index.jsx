@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 import { Slider } from "antd";
 import { Control, Operator, PlayBarWrapper, PlayInfo } from "./styled";
@@ -33,11 +34,11 @@ const PlayerBar = () => {
   const playCountTime = formatDate(currentTime, "mm:ss");
   const allTime = formatDate(duration, "mm:ss");
 
-  const handlePlayMusic = () => {
+  const handlePlayMusic = useCallback(() => {
     audioRef.current.src = playMusic(currentSong.id);
     isPlay ? audioRef.current.pause() : audioRef.current.play();
     setIsPlay(!isPlay);
-  };
+  }, [currentSong.id, isPlay]);
 
   const timeUpdate = (e) => {
     if (!isChange) {
@@ -46,11 +47,14 @@ const PlayerBar = () => {
     }
   };
 
-  const sliderChange = useCallback((value) => {
-    setCurrentTime((value / 100) * duration);
-    setIsChange(true);
-    setProgress(value);
-  }, []);
+  const sliderChange = useCallback(
+    (value) => {
+      setCurrentTime((value / 100) * duration);
+      setIsChange(true);
+      setProgress(value);
+    },
+    [duration]
+  );
 
   const sliderAfterChange = useCallback(
     (value) => {
@@ -63,7 +67,7 @@ const PlayerBar = () => {
         handlePlayMusic();
       }
     },
-    [duration, isPlay]
+    [duration, handlePlayMusic, isPlay]
   );
 
   return (
@@ -79,12 +83,12 @@ const PlayerBar = () => {
         </Control>
         <PlayInfo>
           <div className="image">
-            <a href="/#">
+            <NavLink to="/discover/Player">
               <img
                 src={getImageSize(artist.picUrl, 35)}
                 alt={currentSong.name}
               />
-            </a>
+            </NavLink>
           </div>
           <div className="info">
             <div className="song">

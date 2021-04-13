@@ -9,6 +9,7 @@ import ATSongs from "../pages/discover/c-pages/songs";
 import ARDjRadio from "../pages/discover/c-pages/djradio";
 import ATAlbum from "../pages/discover/c-pages/album";
 import ATArtist from "../pages/discover/c-pages/artist";
+import Player from "../pages/player";
 
 const routes = [
   {
@@ -49,6 +50,10 @@ const routes = [
       {
         path: "/discover/artist",
         component: ATArtist,
+      },
+      {
+        path: "/discover/Player",
+        component: Player,
       },
     ],
   },
