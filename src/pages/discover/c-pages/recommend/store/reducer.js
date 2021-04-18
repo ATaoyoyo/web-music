@@ -26,7 +26,7 @@ function reducer(state = defaultStatus, action) {
     case actionTypes.ORIGINAL_RANKING_SONGS:
       return state.set("originalRankingSongs", action.data);
     default:
-      return defaultStatus;
+      return state;
   }
 }
 
