@@ -2,18 +2,29 @@ import React, { memo } from "react";
 import { TopRankingWrapper } from "./styled";
 
 import { getImageSize } from "@/utils/format";
+import { getSongDetailAction } from "@/pages/player/store";
+import { useDispatch } from "react-redux";
 
 const TopRanking = (props) => {
   const { info } = props;
 
   const { tracks = [] } = info;
 
+  const dispatch = useDispatch();
+
+  const playMusic = (item) => {
+    console.log(item.id);
+    dispatch(getSongDetailAction(item.id));
+  };
+
   return (
     <TopRankingWrapper>
       <div className="header">
         <div className="image">
           <img src={getImageSize(info.coverImgUrl)} alt="" />
-          <a href="/todo" className="image_cover">Ranking</a>
+          <a href="/todo" className="image_cover">
+            Ranking
+          </a>
         </div>
         <div className="info">
           <a href="/todo">{info.name}</a>
@@ -31,7 +42,10 @@ const TopRanking = (props) => {
               <div className="info">
                 <span className="name text-nowrap">{item.name}</span>
                 <div className="operate">
-                  <button className="btn play sprite_02" />
+                  <button
+                    className="btn play sprite_02"
+                    onClick={() => playMusic(item)}
+                  />
                   <button className="btn addto sprite_icon2" />
                   <button className="btn favor sprite_02" />
                 </div>

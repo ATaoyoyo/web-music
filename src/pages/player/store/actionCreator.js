@@ -16,6 +16,12 @@ const changePlayListAction = (res) => ({
   data: res,
 });
 
+const changeCurrentSongUrlAction = res => ({
+  type: actionType.CHANGE_CURRENT_SONG_URL,
+  data: res
+})
+
+// 歌曲详情
 export function getSongDetailAction(ids) {
   return (dispatch, getState) => {
     // 根据id查找playList是否有当前歌曲
@@ -41,4 +47,13 @@ export function getSongDetailAction(ids) {
       });
     }
   };
+}
+
+// 歌曲播放Url
+export function getSongUrl(id) {
+  return dispatch => {
+    getSongUrl(id).then(res => {
+      dispatch(changeCurrentSongUrlAction(res.data[0].url))
+    })
+  }
 }

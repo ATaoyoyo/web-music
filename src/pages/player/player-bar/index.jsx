@@ -10,12 +10,15 @@ import { formatDate, getImageSize, playMusic } from "@/utils/format";
 const PlayerBar = () => {
   // 获取歌曲详情
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getSongDetailAction(347231));
   }, [dispatch]);
-  const { currentSong } = useSelector(
+
+  const { currentSong, currentSongUrl } = useSelector(
     (state) => ({
       currentSong: state.getIn(["player", "currentSong"]),
+      currentSongUrl: state.getIn(["player", "currentSongUrl"]),
     }),
     shallowEqual
   );
@@ -35,8 +38,11 @@ const PlayerBar = () => {
   const allTime = formatDate(duration, "mm:ss");
 
   const handlePlayMusic = useCallback(() => {
-    audioRef.current.src = playMusic(currentSong.id);
-    console.log(playMusic(currentSong.id));
+    if (currentSongUrl) {
+      audioRef.current.src = currentSongUrl;
+    } else {
+      audioRef.current.src = playMusic(currentSong.id);
+    }
     isPlay ? audioRef.current.pause() : audioRef.current.play();
     setIsPlay(!isPlay);
   }, [currentSong.id, isPlay]);
