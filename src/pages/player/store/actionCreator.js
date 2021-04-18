@@ -1,5 +1,5 @@
 import * as actionType from "./constant";
-import { getSongDetail } from "../../../servies/player";
+import { getSongDetail, getSongUrl } from "../../../servies/player";
 
 const changeSongDetailAction = (res) => ({
   type: actionType.CHANGE_SONG_DETAIL,
@@ -16,10 +16,15 @@ const changePlayListAction = (res) => ({
   data: res,
 });
 
-const changeCurrentSongUrlAction = res => ({
+const changeCurrentSongUrlAction = (res) => ({
   type: actionType.CHANGE_CURRENT_SONG_URL,
-  data: res
-})
+  data: res,
+});
+
+const changeSequenceAction = (res) => ({
+  type: actionType.CHANGE_SEQUENCE,
+  data: res,
+});
 
 // 歌曲详情
 export function getSongDetailAction(ids) {
@@ -50,10 +55,17 @@ export function getSongDetailAction(ids) {
 }
 
 // 歌曲播放Url
-export function getSongUrl(id) {
+export function getSongUrlAction(id) {
+  return (dispatch) => {
+    getSongUrl(id).then((res) => {
+      dispatch(changeCurrentSongUrlAction(res.data[0].url));
+    });
+  };
+}
+
+// 歌曲播放模式
+export function getSequenceAction(num) {
   return dispatch => {
-    getSongUrl(id).then(res => {
-      dispatch(changeCurrentSongUrlAction(res.data[0].url))
-    })
+    dispatch(changeSequenceAction(num))
   }
 }

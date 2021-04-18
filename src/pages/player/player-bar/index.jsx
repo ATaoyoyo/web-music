@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 import { Slider } from "antd";
 import { Control, Operator, PlayBarWrapper, PlayInfo } from "./styled";
-import { getSongDetailAction } from "../store/actionCreator";
+import { getSequenceAction, getSongDetailAction, getSongUrlAction } from "../store/actionCreator";
 import { formatDate, getImageSize, playMusic } from "@/utils/format";
 
 const PlayerBar = () => {
@@ -13,12 +13,14 @@ const PlayerBar = () => {
 
   useEffect(() => {
     dispatch(getSongDetailAction(347231));
+    dispatch(getSongUrlAction(347231));
   }, [dispatch]);
 
-  const { currentSong, currentSongUrl } = useSelector(
+  const { currentSong, currentSongUrl, sequence } = useSelector(
     (state) => ({
       currentSong: state.getIn(["player", "currentSong"]),
       currentSongUrl: state.getIn(["player", "currentSongUrl"]),
+      sequence: state.getIn(["player", "sequence"]),
     }),
     shallowEqual
   );
@@ -38,11 +40,10 @@ const PlayerBar = () => {
   const allTime = formatDate(duration, "mm:ss");
 
   const handlePlayMusic = useCallback(() => {
-    if (currentSongUrl) {
-      audioRef.current.src = currentSongUrl;
-    } else {
-      audioRef.current.src = playMusic(currentSong.id);
-    }
+    audioRef.current.src = currentSongUrl
+      ? currentSongUrl
+      : playMusic(currentSong.id);
+
     isPlay ? audioRef.current.pause() : audioRef.current.play();
     setIsPlay(!isPlay);
   }, [currentSong.id, isPlay]);
@@ -76,6 +77,14 @@ const PlayerBar = () => {
     },
     [duration, handlePlayMusic, isPlay]
   );
+
+  const changeSequence = () => {
+    let currentSequence = sequence + 1;
+    if (currentSequence > 2) {
+      currentSequence = 0;
+    }
+    dispatch(getSequenceAction(currentSequence))
+  };
 
   return (
     <PlayBarWrapper className="sprite_player">
@@ -122,14 +131,17 @@ const PlayerBar = () => {
             </div>
           </div>
         </PlayInfo>
-        <Operator>
+        <Operator sequence={sequence}>
           <div className="left">
             <button className="sprite_player btn favor" />
             <button className="sprite_player btn share" />
           </div>
           <div className="right sprite_player">
             <button className="sprite_player btn volume" />
-            <button className="sprite_player btn loop" />
+            <button
+              className="sprite_player btn loop"
+              onClick={() => changeSequence()}
+            />
             <button className="sprite_player btn playlist" />
           </div>
         </Operator>

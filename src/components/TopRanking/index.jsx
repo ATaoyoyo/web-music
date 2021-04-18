@@ -13,7 +13,6 @@ const TopRanking = (props) => {
   const dispatch = useDispatch();
 
   const playMusic = (item) => {
-    console.log(item.id);
     dispatch(getSongDetailAction(item.id));
   };
 
